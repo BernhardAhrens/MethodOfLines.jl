@@ -1,5 +1,5 @@
 
-using NeuralPDE, Flux, MethodOfLines, ModelingToolkit, OrdinaryDiffEq, Optimization, OptimizationOptimJL, DomainSets, Plots
+using NeuralPDE, MethodOfLines, Flux, ModelingToolkit, OrdinaryDiffEq, Optimization, OptimizationOptimJL, DomainSets, Plots
 import ModelingToolkit: Interval, infimum, supremum
 
 # Tests
@@ -24,7 +24,7 @@ import ModelingToolkit: Interval, infimum, supremum
 
     @named pde_system = PDESystem(eq, bcs, domains, [t, x], [u(t, x), cumuSum(t, x)])
 
-    # solve with with NeuralPDE.jl
+#=     # solve with with NeuralPDE.jl
     chain = Chain(Dense(2, 15, Flux.tanh), Dense(15, 15, Flux.tanh), Dense(15, 1)) |> f64
     strategy_ = GridTraining(0.1)
     discretization = PhysicsInformedNN(chain, strategy_)
@@ -41,35 +41,26 @@ import ModelingToolkit: Interval, infimum, supremum
     phi = discretization.phi
     u_predict = [[first(phi([t, x], res.u)) for t in ts] for x in xs]
 
-    p1 = plot(ts, u_predict, legend=:inline)
+    p1 = plot(ts, u_predict, legend=:inline) =#
 
     # solve with MethodOfLines
     order = 2
     discretization = MOLFiniteDifference([x => 0.1], t, approx_order=order, grid_align=center_align)
 
     prob = MethodOfLines.discretize(pde_system, discretization)
-    code = ODEFunctionExpr(prob)
+    #code = ODEFunctionExpr(prob)
+
+    MethodOfLines.split_terms(pde_system.eqs)
 
     sol = solve(prob, QNDF(), saveat=0.1)
-
-
-    function generate_code(pdesys::PDESystem, discretization::MethodOfLines.MOLFiniteDifference, filename="code.jl")
-        code = ODEFunctionExpr(pdesys, discretization)
-        rm(filename; force=true)
-        open(filename, "a") do io
-            println(io, code)
-        end
-    end
-
-    generate_code(pde_system, discretization, "/User/homes/bahrens/minerva_bahrens/projects/hyco/code_generated.jl")
-
-    code = ODEFunctionExpr(pde_system, discretization)
 
     sol.u
 
     p2 = plot(sol[u(t, x)], legend=:inline)
 
     plot(p1, p2)
+
+    generate_code(pdesys, discretization)
 
     # Test against NeuralPDE solution
     for i in 1:length(t_sol)

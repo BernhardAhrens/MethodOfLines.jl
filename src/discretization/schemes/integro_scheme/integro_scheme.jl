@@ -18,8 +18,8 @@ end
 
 # Note that indexmap is used along with the function `Idx` to create an equivalent index for the discrete form of `u`,
 # which may have a different number of dimensions to `II`
-function generate_central_difference_rules(II::CartesianIndex, s::DiscreteSpace, terms::Vector{<:Term}, indexmap::Dict)
-    rules = [[@rule Integrate(x)(u) => piecewise_sum(Idx(II, s, u, indexmap), s, u, x) for x in params(u, x)] for u in depvars]
+@inline  function generate_integrate(II::CartesianIndex, s::DiscreteSpace, depvars, derivweights::DifferentialDiscretizer, pmap, indexmap, terms)
+#=     rules = [[@rule Integrate(x)(u) => piecewise_sum(Idx(II, s, u, indexmap), s, u, x) for x in params(u, x)] for u in depvars]
 
     rules = reduce(vcat, rules)
 
@@ -32,5 +32,13 @@ function generate_central_difference_rules(II::CartesianIndex, s::DiscreteSpace,
             end
         end
     end
-    return rule_pairs
+    return rule_pairs =#
+
+    central_ufunc(u, I, x) = s.discvars[u][I]
+    return reduce(vcat, [reduce(vcat, [[Integrate(x)(u) => piecewise_sum(derivweights.map[Integrate(x)], Idx(II, s, u, indexmap), s, pmap.map[operation(u)][x], (x2i(s, u, x), x), u, central_ufunc) for d in (
+        let orders = derivweights.orders[x]
+            orders[iseven.(orders)]
+        end
+    )] for x in params(u, s)]) for u in depvars])
+
 end

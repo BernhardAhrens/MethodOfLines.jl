@@ -54,6 +54,7 @@ include("discretization/schemes/half_offset_centred_difference.jl")
 include("discretization/schemes/nonlinear_laplacian/nonlinear_laplacian.jl")
 include("discretization/schemes/spherical_laplacian/spherical_laplacian.jl")
 include("discretization/schemes/WENO/WENO.jl")
+include("discretization/schemes/integro_scheme/integro_scheme.jl")
 
 # System Discretization
 include("discretization/generate_finite_difference_rules.jl")
