@@ -11,7 +11,9 @@ import ModelingToolkit: Interval, infimum, supremum
     xmin = 0.0
     xmax = 2.0
 
+    #Integral_xmin_x(x) = Integral(x in DomainSets.ClosedInterval(xmin, x))
     Ix = Integral(x in DomainSets.ClosedInterval(xmin, x)) # basically cumulative sum from 0 to x
+    Ix = Integral(x in DomainSets.ClosedInterval(xmin, x))
 
     eq = [
         cumuSum(t,x) ~ Ix(u(t,x)), # with Integral from xmin to x: runs with NeuralPDE.jl, but not MethodOfLines.jl
@@ -50,7 +52,7 @@ import ModelingToolkit: Interval, infimum, supremum
     prob = MethodOfLines.discretize(pde_system, discretization)
     #code = ODEFunctionExpr(prob)
 
-    MethodOfLines.split_terms(pde_system.eqs)
+    #MethodOfLines.split_terms(pde_system.eqs)
 
     sol = solve(prob, QNDF(), saveat=0.1)
 

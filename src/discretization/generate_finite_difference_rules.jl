@@ -67,7 +67,7 @@ function generate_finite_difference_rules(II::CartesianIndex, s::DiscreteSpace, 
     spherical_diffusion_rules = generate_spherical_diffusion_rules(II, s, depvars, derivweights, pmap, indexmap, split_additive_terms(pde))
 
     # integro scheme
-    integro_rules = generate_integrate(II, s, depvars, derivweights, pmap, indexmap, terms)
+    integro_rules = generate_integrate(II, s, terms, indexmap, depvars)
 
     return vcat(vec(spherical_diffusion_rules), vec(nonlinlap_rules), vec(central_deriv_rules_cartesian), vec(advection_rules), vec(integro_rules))
 end
