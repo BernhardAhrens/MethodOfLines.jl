@@ -11,6 +11,7 @@ import ModelingToolkit: Interval, infimum, supremum
     xmin = 0.0
     xmax = 2.0
 
+    # test
     #Integral_xmin_x(x) = Integral(x in DomainSets.ClosedInterval(xmin, x))
     Ix = Integral(x in DomainSets.ClosedInterval(xmin, x)) # basically cumulative sum from 0 to x
     Ix = Integral(x in DomainSets.ClosedInterval(xmin, x))
