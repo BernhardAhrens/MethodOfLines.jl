@@ -25,6 +25,7 @@ const FUNCTIONAL_GROUPS = [
     "Convection_NU",
     "Wave_Eq_Staggered",
     "Discretization",
+    "Differentiable",
 ]
 
 run_tests(;
@@ -120,6 +121,7 @@ run_tests(;
                 include(joinpath(@__DIR__, "Discretization", "problem_construction.jl"))
             end
         end,
+        "Differentiable" => joinpath(@__DIR__, "Differentiable", "differentiable_problem.jl"),
     ),
     qa = (; env = joinpath(@__DIR__, "qa"), body = joinpath(@__DIR__, "qa", "qa.jl")),
     all = FUNCTIONAL_GROUPS,

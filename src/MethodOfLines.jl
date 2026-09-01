@@ -3,6 +3,7 @@ import LinearAlgebra
 using LinearAlgebra: I, cond, dot
 import SciMLBase
 using SciMLBase: DAEProblem, NonlinearProblem, ODEFunction, ODEProblem, SplitODEProblem
+import SciMLStructures
 import DiffEqBase
 import ModelingToolkit
 using ModelingToolkit: get_unknowns,
@@ -133,13 +134,14 @@ include("discretization/staggered_discretize.jl")
 include("discretization/discretize_equations.jl")
 include("dae_discretization.jl")
 include("MOL_discretization.jl")
+include("interface/differentiable.jl")
 
 ## PrecompileTools
 include("precompile.jl")
 
 # Export
 export MOLFiniteDifference, discretize, symbolic_discretize, ODEFunctionExpr, generate_code,
-    edge_align, center_align, get_discrete, chebyspace
+    edge_align, center_align, get_discrete, chebyspace, differentiable_problem
 export UpwindScheme, WENOScheme, FunctionalScheme, MOLDiscCallback
 
 end
